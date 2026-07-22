@@ -3,9 +3,7 @@ package com.alessandro.gymlog
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.clickable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FitnessCenter
@@ -14,8 +12,8 @@ import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import com.alessandro.gymlog.data.AppDatabase
@@ -33,35 +31,35 @@ class MainActivity : ComponentActivity() {
             val themeMode by Settings.themeMode(appContext).collectAsState(initial = ThemeMode.SYSTEM)
             var tab by remember { mutableStateOf(0) }
             var activeProgramId by remember { mutableStateOf<Long?>(null) }
-            var isTrainingMinimized by remember { mutableStateOf(false) }
+            var isMinimized by remember { mutableStateOf(false) }
 
             GymLogTheme(themeMode) {
                 Scaffold(
                     bottomBar = {
-                        if (activeProgramId == null || isTrainingMinimized) {
+                        if (activeProgramId == null || isMinimized) {
                             NavigationBar {
                                 NavigationBarItem(
                                     selected = tab == 0,
                                     onClick = { tab = 0 },
-                                    icon = { Icon(Icons.Filled.FitnessCenter, contentDescription = "Упражнения") },
+                                    icon = { Icon(Icons.Filled.FitnessCenter, "Ex") },
                                     label = { Text("Упражнения", maxLines = 1) }
                                 )
                                 NavigationBarItem(
                                     selected = tab == 1,
                                     onClick = { tab = 1 },
-                                    icon = { Icon(Icons.Filled.List, contentDescription = "Программы") },
+                                    icon = { Icon(Icons.Filled.List, "Pr") },
                                     label = { Text("Программы", maxLines = 1) }
                                 )
                                 NavigationBarItem(
                                     selected = tab == 2,
                                     onClick = { tab = 2 },
-                                    icon = { Icon(Icons.Filled.DateRange, contentDescription = "Календарь") },
+                                    icon = { Icon(Icons.Filled.DateRange, "Cal") },
                                     label = { Text("Календарь", maxLines = 1) }
                                 )
                                 NavigationBarItem(
                                     selected = tab == 3,
                                     onClick = { tab = 3 },
-                                    icon = { Icon(Icons.Filled.Settings, contentDescription = "Настройки") },
+                                    icon = { Icon(Icons.Filled.Settings, "Set") },
                                     label = { Text("Настройки", maxLines = 1) }
                                 )
                             }
@@ -69,38 +67,30 @@ class MainActivity : ComponentActivity() {
                     }
                 ) { padding ->
                     Box(Modifier.padding(padding)) {
-                        if (activeProgramId != null && !isTrainingMinimized) {
+                        if (activeProgramId != null && !isMinimized) {
                             TrainingScreen(
-                                db = db,
-                                programId = activeProgramId!!,
-                                onBack = { activeProgramId = null; isTrainingMinimized = false },
-                                onMinimize = { isTrainingMinimized = true }
+                                db, activeProgramId!!,
+                                { activeProgramId = null; isMinimized = false },
+                                { isMinimized = true }
                             )
                         } else {
                             Box {
                                 when (tab) {
                                     0 -> ExercisesScreen(db)
-                                    1 -> ProgramsScreen(db) { id -> activeProgramId = id; isTrainingMinimized = false }
+                                    1 -> ProgramsScreen(db) { id -> activeProgramId = id; isMinimized = false }
                                     2 -> CalendarScreen(db)
                                     3 -> SettingsScreen(themeMode, { mode ->
                                         scope.launch { Settings.setThemeMode(appContext, mode) }
                                     }, appContext)
                                 }
-
-                                if (isTrainingMinimized && activeProgramId != null) {
+                                if (isMinimized && activeProgramId != null) {
                                     Surface(
-                                        modifier = Modifier
-                                            .align(Alignment.TopCenter)
-                                            .fillMaxWidth()
-                                            .clickable { isTrainingMinimized = false },
+                                        Modifier.fillMaxWidth().clickable { isMinimized = false },
                                         color = MaterialTheme.colorScheme.primaryContainer,
-                                        shadowElevation = 4.dp
+                                        shadowElevation = 8.dp
                                     ) {
-                                        Text(
-                                            "⏳ Тренировка активна. Нажмите, чтобы вернуться",
-                                            modifier = Modifier.padding(12.dp),
-                                            style = MaterialTheme.typography.labelLarge
-                                        )
+                                        Text("↩ Тренировка активна. Нажмите, чтобы вернуться", 
+                                             Modifier.padding(12.dp), style = MaterialTheme.typography.labelLarge)
                                     }
                                 }
                             }
