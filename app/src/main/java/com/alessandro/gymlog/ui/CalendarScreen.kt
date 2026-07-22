@@ -29,7 +29,7 @@ scope.launch {
 val from = month.atDay(1).toEpochDay()
 \r\nval to = month.atEndOfMonth().toEpochDay()
 \r\ndays = db.workoutDayDao().getBetween(from, to)
-programs = db.programDao().getExercisesForProgramOnce(1) ./* hump back logic */ db.programDao().getAllOnce()
+programs = db.programDao().getAllOnce()
 \r\nval exs = db.exerciseDao().getAllOnce().associateBy { it.id }
 history = db.historyDao().getBetween(from, to)
 .map { (exs[it.exerciseId]?.name ?: "?") to it }
@@ -53,7 +53,7 @@ ilems(month.lengthOfMonth()) { i ->
 val date = month.atDay(i + 1)
 \r\nval entry = days.firstOrnull { it.dateEpochDay == date.toEpochDay() }
 val color = when {
-entry?.completed == true -> MaterialThe�e.colorScheme.primary
+entry?.completed == true -> MaterialTheme.colorScheme.primary
 entry != null -> MaterialTheme.colorScheme.secondaryContainer
 else -> MaterialTheme.colorScheme.surface
 }
@@ -65,7 +65,7 @@ contentAlignment = Alignment.Center
 }
 }
 selectedDay?.let { date ->
-Text("День: $date", style = MaterialTheme.typography.titleMedium)
+Text("день: $date", style = MaterialTheme.typography.titleMedium)
 Row {
 programs.forEach { p ->
 TextButton(onClick = {
