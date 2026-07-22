@@ -19,7 +19,7 @@ fun TrainingScreen(exerciseDao: ExerciseDao) {
     val scope = rememberCoroutineScope()
     val exercises by exerciseDao.getAllExercises().collectAsState(initial = emptyList())
     var showDialog by remember { mutableStateOf(false) }
-    var name by remember { mutableStateOf("") }
+    var exerciseName by remember { mutableStateOf("") }
 
     Scaffold(
         topBar = { TopAppBar(title = { Text("Моя тренировка") }) },
@@ -29,17 +29,13 @@ fun TrainingScreen(exerciseDao: ExerciseDao) {
             }
         }
     ) { padding ->
-        Column(modifier = Modifier.padding(padding)) {
-            LazyColumn(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-                items(exercises) { exercise ->
-                    Card(
-                        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
-                    ) {
-                        Column(modifier = Modifier.padding(16.dp)) {
-                            Text(text = exercise.name, style = MaterialTheme.typography.headlineSmall)
-                            Text(text = "Вес: ${exercise.weight} кг")
-                            Text(text = "Подходы: ${exercise.sets}")
-                        }
+        LazyColumn(modifier = Modifier.fillMaxSize().padding(padding).padding(16.dp)) {
+            items(exercises) { exercise ->
+                Card(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Text(text = exercise.name, style = MaterialTheme.typography.headlineSmall)
+                        Text(text = "Вес: ${exercise.currentWeight} кг")
+                        Text(text = "Подходы: ${exercise.setsCount}")
                     }
                 }
             }
@@ -49,15 +45,23 @@ fun TrainingScreen(exerciseDao: ExerciseDao) {
             AlertDialog(
                 onDismissRequest = { showDialog = false },
                 title = { Text("Новое упражнение") },
-                text = {
-                    TextField(value = name, onValueChange = { name = it }, label = { Text("Название") })
-                },
+                text = { TextField(value = exerciseName, onValueChange = { exerciseName = it }) },
                 confirmButton = {
                     Button(onClick = {
                         scope.launch {
-                            exerciseDao.insert(Exercise(name = name, weight = 0.0, sets = 0, reps = 0, increment = 2.5))
+                            // Соответствие вашему конструктору Exercise
+                            exerciseDao.insert(Exercise(
+                                name = exerciseName, 
+                                currentWeight = 0.0, 
+                                weightIncrement = 2.5, 
+                                setsCount = 0, 
+                                repsCount = 0, 
+                                durationMinutes = 0, 
+                                restMinSeconds = 60, 
+                                restMaxSeconds = 120
+                            ))
                             showDialog = false
-                            name = ""
+                            exerciseName = ""
                         }
                     }) { Text("Добавить") }
                 }
