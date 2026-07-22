@@ -7,39 +7,34 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.alessandro.gymlog.data.WorkoutDayDao
+import com.alessandro.gymlog.data.AppDatabase
 import com.alessandro.gymlog.data.WorkoutDay
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CalendarScreen(workoutDayDao: WorkoutDayDao) {
+fun CalendarScreen(db: AppDatabase) {
     val scope = rememberCoroutineScope()
-    // Используем правильный метод из вашего DAO
-    val workoutDays by workoutDayDao.getAllDays().collectAsState(initial = emptyList())
+    val workoutDays by db.workoutDayDao().getAllDays().collectAsState(initial = emptyList())
     
     Scaffold(
-        topBar = { TopAppBar(title = { Text("Календарь тренировок") }) }
+        topBar = { TopAppBar(title = { Text("Календарь") }) }
     ) { padding ->
-        LazyColumn(
-            modifier = Modifier.fillMaxSize().padding(padding).padding(16.dp)
-        ) {
+        LazyColumn(modifier = Modifier.fillMaxSize().padding(padding).padding(16.dp)) {
             items(workoutDays) { day ->
                 Card(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
                     ListItem(
-                        headlineContent = { Text("День: ${day.dateEpochDay}") },
-                        supportingContent = { Text("Программа ID: ${day.programId}") }
+                        headlineContent = { Text("Дата: ${day.dateEpochDay}") }
                     )
                 }
             }
             item {
                 Button(onClick = {
                     scope.launch {
-                        // Используем конструктор вашей сущности WorkoutDay
-                        workoutDayDao.insert(WorkoutDay(dateEpochDay = LocalDate.now().toEpochDay(), programId = 0))
+                        db.workoutDayDao().insert(WorkoutDay(dateEpochDay = LocalDate.now().toEpochDay(), programId = 0))
                     }
-                }) { Text("Добавить сегодня") }
+                }) { Text("Отметить сегодня") }
             }
         }
     }
