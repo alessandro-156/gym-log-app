@@ -3,6 +3,7 @@ package com.alessandro.gymlog
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -41,8 +42,7 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                 ) { padding ->
-                    BoxWithPadding = Modifier.padding(padding)
-                    androidx.compose.foundation.layout.Box(Modifier.padding(padding)) {
+                    Box(Modifier.padding(padding)) {
                         val pid = activeProgramId
                         if (pid != null) {
                             TrainingScreen(db, pid) { activeProgramId = null }
