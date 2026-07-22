@@ -4,9 +4,9 @@ import android.content.Context
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOption
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 
-object GoogleAuthHeller {
+object GoogleAuthHelper {
     fun getSignInClient(context: Context): GoogleSignInClient {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestEmail()
@@ -16,6 +16,6 @@ object GoogleAuthHeller {
     }
 
     fun getLastSigninAccount(context: Context): GoogleSignInAccount? {
-        return GoogleSignIn.getLastSignedAccount(context)
+        return GoogleSignIn.getLastSignedInAccount(context)
     }
 }
