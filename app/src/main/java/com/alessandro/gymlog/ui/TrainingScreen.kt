@@ -9,20 +9,21 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.alessandro.gymlog.data.AppDatabase
 import com.alessandro.gymlog.data.Exercise
-import com.alessandro.gymlog.data.ExerciseDao
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TrainingScreen(exerciseDao: ExerciseDao) {
+fun TrainingScreen(db: AppDatabase, programId: Long, onBack: () -> Unit) {
     val scope = rememberCoroutineScope()
-    val exercises by exerciseDao.getAllExercises().collectAsState(initial = emptyList())
+    // Используем db.exerciseDao() внутри
+    val exercises by db.exerciseDao().getAllExercises().collectAsState(initial = emptyList())
     var showDialog by remember { mutableStateOf(false) }
     var exerciseName by remember { mutableStateOf("") }
 
     Scaffold(
-        topBar = { TopAppBar(title = { Text("Моя тренировка") }) },
+        topBar = { TopAppBar(title = { Text("Тренировка") }) },
         floatingActionButton = {
             FloatingActionButton(onClick = { showDialog = true }) {
                 Icon(Icons.Default.Add, contentDescription = "Добавить")
@@ -35,7 +36,6 @@ fun TrainingScreen(exerciseDao: ExerciseDao) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text(text = exercise.name, style = MaterialTheme.typography.headlineSmall)
                         Text(text = "Вес: ${exercise.currentWeight} кг")
-                        Text(text = "Подходы: ${exercise.setsCount}")
                     }
                 }
             }
@@ -49,15 +49,14 @@ fun TrainingScreen(exerciseDao: ExerciseDao) {
                 confirmButton = {
                     Button(onClick = {
                         scope.launch {
-                            // Соответствие вашему конструктору Exercise
-                            exerciseDao.insert(Exercise(
-                                name = exerciseName, 
-                                currentWeight = 0.0, 
-                                weightIncrement = 2.5, 
-                                setsCount = 0, 
-                                repsCount = 0, 
-                                durationMinutes = 0, 
-                                restMinSeconds = 60, 
+                            db.exerciseDao().insert(Exercise(
+                                name = exerciseName,
+                                currentWeight = 0.0f, // Используем Float
+                                weightIncrement = 2.5f, // Используем Float
+                                sets = 0,
+                                reps = 0,
+                                durationMinutes = 0,
+                                restMinSeconds = 60,
                                 restMaxSeconds = 120
                             ))
                             showDialog = false
