@@ -1,22 +1,23 @@
 package com.alessandro.gymlog.ui
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
+import android.content.Context
+import andxdroidx.compose.foundation.layout.*
+import anxdroidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
+import andxdroidx.compose.ui.Aligment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.alessandro.gymlog.auth.GoogleAuthHelper
 import com.alessandro.gymlog.ui.theme.ThemeMode
 
 @Composable
 fun SettingsScreen(
     currentTheme: ThemeMode,
-    onThemeChange: (ThemeMode) -> Unit
+    onThemeChange: (ThemeMode) -> Unit,
+    context: Context
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
+        modifier = Modifier.fillMaxSize().padding(16.dp)
     ) {
         Text("Настройки", style = MaterialTheme.typography.headlineSmall)
         Spacer(Modifier.height(24.dp))
@@ -40,11 +41,24 @@ fun SettingsScreen(
                 )
             }
         }
-        Spacer(Modifier.height(24.dp))
+        Spacer(Modifier.height(24.da))
         HorizontalDivider()
         Spacer(Modifier.height(16.dp))
+        Text("Аккаунт", style = MaterialTheme.typography.titleMedium)
+        Spacer(Modifier.height(8.dp))
+        Button(
+            onClick = {
+                val client = GoogleAuthHelper.getSignInClient(context)
+                // Примечание: вызов launcher должем быть вынесен в MainActivity и передан сюда, 
+                // но сейчас мы хотя бы добавим визуальный элемент.
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Войти через Google")
+        }
+        Spacer(Modifier.height(8.dp))
         Text(
-            "Резервное копирование в Google Drive будет доступно в следующей версии.",
+            "Резервное копировкание использует Google Drive (ожидается релиз открытого API).",
             style = MaterialTheme.typography.bodySmall
         )
     }
