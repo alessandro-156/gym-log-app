@@ -16,41 +16,30 @@ import java.time.LocalDate
 @Composable
 fun CalendarScreen(workoutDayDao: WorkoutDayDao) {
     val scope = rememberCoroutineScope()
-    val workoutDays by workoutDayDao.getAllWorkoutDays().collectAsState(initial = emptyList())
+    // Используем правильный метод из вашего DAO
+    val workoutDays by workoutDayDao.getAllDays().collectAsState(initial = emptyList())
     
     Scaffold(
         topBar = { TopAppBar(title = { Text("Календарь тренировок") }) }
     ) { padding ->
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .padding(16.dp)
+            modifier = Modifier.fillMaxSize().padding(padding).padding(16.dp)
         ) {
             items(workoutDays) { day ->
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 4.dp)
-                ) {
+                Card(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
                     ListItem(
-                        headlineContent = { Text("Тренировка: ${day.date}") },
-                        supportingContent = { Text("Статус: Завершена") }
+                        headlineContent = { Text("День: ${day.dateEpochDay}") },
+                        supportingContent = { Text("Программа ID: ${day.programId}") }
                     )
                 }
             }
-            
             item {
-                Button(
-                    onClick = {
-                        scope.launch {
-                            workoutDayDao.insert(WorkoutDay(date = LocalDate.now().toString()))
-                        }
-                    },
-                    modifier = Modifier.padding(top = 16.dp)
-                ) {
-                    Text("Добавить сегодняшнюю тренировку")
-                }
+                Button(onClick = {
+                    scope.launch {
+                        // Используем конструктор вашей сущности WorkoutDay
+                        workoutDayDao.insert(WorkoutDay(dateEpochDay = LocalDate.now().toEpochDay(), programId = 0))
+                    }
+                }) { Text("Добавить сегодня") }
             }
         }
     }
