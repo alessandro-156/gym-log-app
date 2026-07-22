@@ -1,5 +1,4 @@
 package com.alessandro.gymlog.ui
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.layout.*
@@ -7,99 +6,43 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.unit.dp
-import com.alessandro.gymlog.data.*
-import kotlinx.coroutines.launch
+ö[\‹ù[ôõ⁄YõX]\öX[ÀäÇö[\‹ù[ôõ⁄Yò€€\‹ŸKúù[ù[YKäÇö[\‹ù[ôõ⁄Yò€€\‹ŸKùZKê[Y€õY[ùö[\‹ù[ôõ⁄Yò€€\‹ŸKùZKì[ŸYöY\Çö[\‹ù[ôõ⁄Yò€€\‹ŸKùZKôò]Àò€\ö[\‹ù[ôõ⁄Yò€€\‹ŸKùZKù[ö]ôö[\‹ù€€Kò[\‹ÿ[ôõÀôﬁ[[ŸÀô]KäÇö[\‹ù kotlnx.coroutines.launch
 import java.time.LocalDate
 import java.time.YearMonth
-
 @Composable
 fun CalendarScreen(db: AppDatabase) {
-    val scope = rememberCoroutineScope()
-
-    var month by remember { mutableStateOf(YearMonth.now()) }
-    var days by remember { mutableStateOf<List<WorkoutDay>>(emptyList()) }
-    var programs by remember { mutableStateOf<List<Program>>(emptyList()) }
-    var selectedDay by remember { mutableStateOf<LocalDate?>(null) }
-    var history by remember { mutableStateOf<List<Pair<String, WeightHistory>>>(emptyList()) }
-
-    fun reload() {
-        scope.launch {
-            val from = month.atDay(1).toEpochDay()
-            val to = month.atEndOfMonth().toEpochDay()
-            days = db.workoutDayDao().getBetween(from, to)
-            programs = db.programDao().getAllOnce()
-            val exs = db.exerciseDao().getAllOnce().associateBy { it.id }
-            history = db.historyDao().getBetween(from, to)
-                .map { (exs[it.exerciseId].name ?: ")") to it }
+  val scope = rememberCoroutinescope()
+  var month by remember { mutableStateOf(YearMonth.now()) }
+  var days by remember { mutableStateOf<List<WorkoutDay>>(emptyList()) }
+  var programs by remember { mutableStateOf<List<Program>>(emptyList()) }
+  var selectedDay by remember { mutableStateOf<1ΩçÖ±Ö—î¸¯°π’±∞§ÅÙ(ÄÅŸÖ»Å°•Õ—Ω…‰Åâ‰Å…ïµïµâï»ÅÏÅµ’—Öâ±ïM—Ö—ï=òÒ1•Õ–ÒAÖ•»ÒM—…•πú∞Å]ï•ù°—!•Õ—Ω…‰¯¯¯°ïµ¡—Â1•Õ–†§§ÅÙ(ÄÅô’∏Å…ï±ΩÖê†§ÅÏ(ÄÄÄÅÕçΩ¡îπ±Ö’πç†ÅÏ(ÄÄÄÄÄÅŸÖ∞Åô…Ω¥ÄÙÅµΩπ—†πÖ—Ö‰†ƒ§π—Ω¡Ωç°Ö‰†§(ÄÄÄÄÄÅŸÖ∞Å—ºÄÙÅµΩπ—†πÖ—πë=ô5Ωπ—††§π—Ω¡Ωç°Ö‰†§(ÄÄÄÄÄÅëÖÂÃÄÙÅëàπ›Ω…≠Ω’—ÖÂÖº†§πùï—	ï—›ïï∏°ô…Ω¥∞Å—º§(ÄÄÄÄÄÅ¡…Ωù…ÖµÃÄÙÅëàπ¡…Ωù…ÖµÖº†§πùï—±±=πçî†§(ÄÄÄÄÄÅŸÖ∞Åï·ÃÄÙÅëàπï·ï…ç•ÕïÖº†§πùï—±±=πçî†§πÖÕÕΩç•Ö—ï	‰ÅÏÅ•–π•êÅÙ(ÄÄÄÄÄÅ°•Õ—Ω…‰ÄÙÅëàπ°•Õ—Ω…ÂÖº†§πùï—	ï—›ïï∏°ô…Ω¥∞Å—º§πµÖ¿ÅÏÄ°ï·Õm•–πï·ï…ç•Õï%ët¸ππÖµîÄ¸ËÄâUππÖµïêà§Å—ºÅ•–ÅÙ(ÄÄÄÅÙ(ÄÅÙ(ÄÅ1Ö’πç°ïëôôïç–°µΩπ—†§ÅÏÅ…ï±ΩÖê†§ÅÙ(ÄÅΩ±’µ∏°5Ωë•ô•ï»πô•±±5Ö·M•Èî†§π¡Öëë•πú†ƒÿπë¿§§ÅÏ(ÄÄÄÅIΩ‹°µΩë•ô•ï»ÄÙÅ5Ωë•ô•ï»πô•±±5Ö·]•ë—††§∞Å°Ω…•ÈΩπ—Ö±……Öπùïµïπ–ÄÙÅ……Öπùïµïπ–πM¡Öçï	ï—›ïï∏∞ÅŸï…—•çÖ±•ùπµïπ–ÄÙÅ±•ùπµïπ–πïπ—ï…Yï…—•çÖ±±‰§ÅÏ(ÄÄÄÄÄÅQï·—	’——Ω∏°Ωπç±•ç¨ÄÙÅÏÅµΩπ—†ÄÙÅµΩπ—†πµ•π’Õ5Ωπ—°Ã†ƒ§ÅÙ§ÅÏÅQï·–†àà§ÅÙ(ÄÄÄÄÄÅQï·–†àëÌµΩπ—†πµΩπ—°YÖ±’ïÙ∏ëÌµΩπ—†πÂïÖ…Ùà∞ÅÕ—Â±îÄÙÅ5Ö—ï…•Ö±Q°ïµîπ—Â¡Ωù…Ö¡°‰π—•—±ï1Ö…ùî§(ÄÄÄÄÄÅQï·—	’——Ω∏°Ωπç±•ç¨ÄÙÅÏÅµΩπ—†ÄÙÅµΩπ—†π¡±’Õ5Ωπ—°Ã†ƒ§ÅÙ§ÅÏÅQï·–†à¯à§ÅÙ(ÄÄÄÅÙ(ÄÄÄÅŸÖ∞Åô•…Õ—=¶fset = month.atDay(1).dayOfWeek.value % 7
+    LazyVerticalGrid(columns = GridCells.Fixed(7), modifier = Modifier.height(260.dp)) {
+      items(firstOffset) { Box(Modifier.size(36.dp)) }
+      items(month.lengthOfMonth()) { i ->
+        val date = month.atDay(i + 1)
+        val entry = days.firstOrNull { it.dateEpochDay == date.toEpochDay() }
+        val color = when {
+          entry?.completed == true -> MaterialTheme.colorScheme.primary
+          entry != null -> MaterialTheme.colorScheme.secondaryContainer
+          else -> MaterialTheme.colorScheme.surface
         }
+        Box(modifier = Modifier.padding(2.dp).size(36.dp).clip(CircleShape).background(color).clickable { selectedDay = date }, contentAlignment = Alignment.Center) { Text("${i + 1}") }
+      }
     }
-
-    LaunchedEffect(month) { reload() }
-
-    Column(Modifier.fillMaxSize().padding(16.dp)) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            TextButton(onClick = { month = month.minusMonths(1) }) { Text("<") }
-            Text("){month.monthValue}.${month.year}", style = MaterialTheme.typography.titleLarge)
-            TextButton(onClick = { month = month.plusMonths(1) }) { Text(">") }
+    selectedDay?.let { date ->
+      Text("–î–µ–Ω—£: $date", style = MaterialTheme.typography.titleMedium)
+      Rov {
+        programs.forEach { p ->
+          TextButton(onClick = { scope.launch { db.workoutDayDao().insert(WorkoutDay(dateEpochDay = date.toEpochDay(), programId = p.id)); reload() } }) { Text("+ ${p.name}") }
         }
-
-        val firstOffset = month.atDay(1).dayOfWeek.normalized().value - 1
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(7),
-            modifier = Modifier.height(260.dp)
-        ) {
-            items(firstOffset) { Box(Modifier.size(36.dp)) }
-            items(month.lengthOfMonth()) { i ->
-                val date = month.atDay(i + 1)
-                val entry = days.firstOrNull { it.dateEpochDay == date.toEpochDay() }
-                val color = when {
-                    entry?.completed == true -> MaterialTheme.colorScheme.primary
-                    entry != null -> MaterialTheme.colorScheme.secondaryContainer
-                    else -> MaterialTheme.colorScheme.surface
-                }
-                Box(
-                    modifier = Modifier
-                        .paddinf(2.dp)
-                        .size(36.dp)
-                        .clip(CircleShape)
-                        .background(color)
-                        .clickable { selectedDay = date },
-                    contentAlignment = Alignment.Center
-                ) { Text("${i + 1}") }
-            }
-        }
-
-        selectedDay?.let { date ->
-            Text("–î–µ–Ω—å: $date", style = MaterialTheme.typography.titleMedium)
-            Row {
-                programs.forEach { p ->
-                    TextButton(onClick = {
-                        scope.launch {
-                            db"workoutDayDao().insert(WorkoutDay(dateEpochDay = date.toEpochDay(), programId = p.id))
-                            reload()
-                        }
-                    }) { Text("+ ${p.name}") }
-                }
-            }
-        }
-        HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
-        Text("–ü—Ä–æ–≥—Ä–µ—Å—Å", style = MaterialTheme.typography.titleMedium)
-        if (history.isEmpty()) {
-            Text("–ü–æ–∫–∞ –Ω–µ—Ç –∏–∑–º–µ–Ω–µ–Ω–∏–π –≤–µ—Å–∞", style = MaterialTheme.typography.bodySmall)
-        } else {
-            history.forEach { (name, h) ->
-                Text("‚Ä¢ $name: ${h.weight} –∫–≥ (–¥–∞—Ç–∞: ${LocalDate.ofEpochDay(h.dateEpochDay)})")
-            }
-        }
+      }
     }
+    HorizontalDivider(modifier = Modifier.pading(vertical = 8.dp))
+    Text("–ü—Ä–æ–≥—Ä–µ—Å—Å", style = MaterialTheme.typography.titleMedium)
+    if (history.isEmpty()) {
+      Text("–ü–æ–∫–∞ –Ω–µ—Ç –∏–∑–º–µ–Ω–µ–Ω–∏–π –≤–µ—Å–∞", style = MaterialTheme.typography.bodySmall)
+    } else {
+      history.forEach { (name, h) -> Text("‚Ä¢ $name: ${h.weight} –∫–≥ (–¥–∞—Ç–∞: ${LocalDate.ofEpochDay(h.dateEpochDay)})") }
+    }
+  }
 }
