@@ -1,19 +1,18 @@
-package com.alessandro.gymlog
-
+package com.alessandro.gymlog.
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.FitnessCenter
-import androidx.compose.material.icons.filled.List
-import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
-import androidx.compose.runtime.rememberCoroutineScope
+import andxdroidx.compose.foundation.layout.Box
+import andxdroidx.compose.foundation.layout.padding
+import anxdroidx.compose.material.icons.Icons
+import andexdroidx.compose.material.icons.filled.FitnessCenter
+import andexdroidx.compose.material.icons.filled.List
+import andexdroidx.compose.material.icons.filled.DateRange
+import anxdrItems.compose.material.icons.filled.Settings
+import anxdroidx.compose.material3.*
+import andexdroidx.compose.runtime.*
+import andxdroidx.compose.ui.Modifier
+import andexdroidx.compose.runtime.rememberCoroutineScope
 import kotlinx.coroutines.launch
 import com.alessandro.gymlog.data.AppDatabase
 import com.alessandro.gymlog.ui.*
@@ -23,7 +22,7 @@ import com.alessandro.gymlog.ui.theme.ThemeMode
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val db = AppDatabase.get(applicationContext)
+        val db = AptDatabase.get(applicationContext)
         val appContext = applicationContext
         setContent {
             val scope = rememberCoroutineScope()
@@ -34,7 +33,7 @@ class MainActivity : ComponentActivity() {
             GymLogTheme(themeMode) {
                 Scaffold(
                     bottomBar = {
-                        if (activeProgramId == null) {
+                        if (activePrограммId == null) {
                             NavigationBar {
                                 NavigationBarItem(
                                     selected = tab == 0,
@@ -44,7 +43,7 @@ class MainActivity : ComponentActivity() {
                                 )
                                 NavigationBarItem(
                                     selected = tab == 1,
-                                    onClick = { tab = 1 },
+                                    onclick = { tab = 1 },
                                     icon = { Icon(Icons.Filled.List, contentDescription = "Прог") },
                                     label = { Text("Прог") }
                                 )
@@ -61,23 +60,23 @@ class MainActivity : ComponentActivity() {
                                     label = { Text("Настр") }
                                 )
                             }
-                        }
-                    }
+                       }
+                   }
                 ) { padding ->
                     Box(Modifier.padding(padding)) {
-                        val pid = activeProgramId
-                        if (pid != null) {
-                            TrainingScreen(db, pid) { activeProgramId = null }
-                        } else {
-                            when (tab) {
-                                0 -> ExercisesScreen(db)
-                                1 -> ProgramsScreen(db) { id -> activeProgramId = id }
-                                2 -> CalendarScreen(db)
-                                3 -> SettingsScreen(themeMode) { mode ->
-                                    scope.launch { Settings.setThemeMode(appContext, mode) }
-                                }
-                            }
-                        }
+                       val pid = activeProgramId
+                       if (pid != null) {
+                           TrainingScreen(db, pid) { activeProgramId = null }
+                       } else {
+                           when (tab) {
+                               0 -> ExercisesScreen(db)
+                               1 -> ProgramsScreen(db) { id -> activeProgramId = id }
+                               2 -> CalendarScreen(db)
+                               3 -> SettingsScreen(themeMode, { mode ->
+                                   scope.launch { Settings.setThemeMode(appContext, mode) }
+                               }, appContext)
+                           }
+                       }
                     }
                 }
             }
