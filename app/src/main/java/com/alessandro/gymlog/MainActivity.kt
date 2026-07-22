@@ -30,6 +30,7 @@ class MainActivity : ComponentActivity() {
             val themeMode by Settings.themeMode(appContext).collectAsState(initial = ThemeMode.SYSTEM)
             var tab by remember { mutableStateOf(0) }
             var activeProgramId by remember { mutableStateOf<Long?>(null) }
+            
             GymLogTheme(themeMode) {
                 Scaffold(
                     bottomBar = {
@@ -66,12 +67,13 @@ class MainActivity : ComponentActivity() {
                     Box(Modifier.padding(padding)) {
                         val pid = activeProgramId
                         if (pid != null) {
-                            TrainingScreen(db, pid) { activeProgramId = null }
+                            // Передаем DAO упражнений и ID программы
+                            TrainingScreen(db.exerciseDao(), pid) { activeProgramId = null }
                         } else {
                             when (tab) {
                                 0 -> ExercisesScreen(db)
                                 1 -> ProgramsScreen(db) { id -> activeProgramId = id }
-                                2 -> CalendarScreen(db)
+                                2 -> CalendarScreen(db.workoutDayDao()) // Передаем DAO календаря
                                 3 -> SettingsScreen(themeMode) { mode ->
                                     scope.launch { Settings.setThemeMode(appContext, mode) }
                                 }
