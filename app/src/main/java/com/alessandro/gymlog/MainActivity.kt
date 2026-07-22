@@ -67,13 +67,13 @@ class MainActivity : ComponentActivity() {
                     Box(Modifier.padding(padding)) {
                         val pid = activeProgramId
                         if (pid != null) {
-                            // Передаем DAO упражнений и ID программы
-                            TrainingScreen(db.exerciseDao(), pid) { activeProgramId = null }
+                            // Передаем db обратно, как было в оригинале
+                            TrainingScreen(db, pid) { activeProgramId = null }
                         } else {
                             when (tab) {
                                 0 -> ExercisesScreen(db)
                                 1 -> ProgramsScreen(db) { id -> activeProgramId = id }
-                                2 -> CalendarScreen(db.workoutDayDao()) // Передаем DAO календаря
+                                2 -> CalendarScreen(db)
                                 3 -> SettingsScreen(themeMode) { mode ->
                                     scope.launch { Settings.setThemeMode(appContext, mode) }
                                 }
