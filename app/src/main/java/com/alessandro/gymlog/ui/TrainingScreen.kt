@@ -27,7 +27,7 @@ fun TrainingScreen(
     val exercises by exercisesFlow.collectAsState(emptyList())
     var increasedIds by remember { mutableStateOf<Set<Long>>(emptySet()) }
     var restSecondsLeft by remember { mutableStateOf(0) }
-    var restRunning remember { mutableStateOf(false) }
+    var restRunning by remember { mutableStateOf(false) }
 
     LaunchedEffect(restRunning, restSecondsLeft) {
         if (restRunning && restSecondsLeft > 0) {
@@ -54,14 +54,14 @@ fun TrainingScreen(
 
         if (restSecondsLeft > 0) {
             LinearProgressIndicator(Modifier.fillMaxWidth())
-            Text("Отдых: $restSecondsLeft сек.", modifier = Matifier.padding(8.dp))
+            Text("Прогрест", modifier = Modifier.padding(8.dp)) 
         }
 
-        LazyColumn(Modifier.fillMaxSize().padding(8.dp)) {
+        LazyColumn(Modifier.fillMaxSize()) {
             items(exercises) { ex ->
                 Card(Modifier.padding(4.dp).fillMaxWidth()) {
                     Column(Modifier.padding(8.dp)) {
-                        Text*ex.name, style = MaterialTheme.typography.titleMedium)
+                        Text(ex.name, style = MaterialTheme.typography.titleMedium)
                         Row(
                             Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween,
@@ -72,7 +72,7 @@ fun TrainingScreen(
                                 Button(onClick = { restSecondsLeft = 60; restRunning = true }) { Text("Отдых") }
                                 Spacer(Modifier.width(8.dp))
                                 if (!increasedIds.contains(ex.id)) {
-                                    OutlinedButton(onclick = {
+                                    OutlinedButton(onClick = {
                                         scope.launch {
                                             db.exerciseDao().update(ex.copy(weight = ex.weight + ex.weightStep))
                                             increasedIds = increasedIds + ex.id
