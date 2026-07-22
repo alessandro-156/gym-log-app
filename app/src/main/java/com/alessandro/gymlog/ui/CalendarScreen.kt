@@ -5,7 +5,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.getValue // Важный импорт для делегатов
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.alessandro.gymlog.data.AppDatabase
@@ -17,9 +17,8 @@ import java.time.LocalDate
 @Composable
 fun CalendarScreen(db: AppDatabase) {
     val scope = rememberCoroutineScope()
-    // Проверьте в WorkoutDayDao, как называется метод получения всех дней. 
-    // Если getAllDays() выдает ошибку, попробуйте getAll() или посмотрите файл WorkoutDayDao.kt
-    val workoutDays by db.workoutDayDao().getAllDays().collectAsState(initial = emptyList())
+    // В вашем Daos.kt метод называется getAll()
+    val workoutDays by db.workoutDayDao().getAll().collectAsState(initial = emptyList())
     
     Scaffold(
         topBar = { TopAppBar(title = { Text("Календарь") }) }
@@ -28,7 +27,8 @@ fun CalendarScreen(db: AppDatabase) {
             items(workoutDays) { day ->
                 Card(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
                     ListItem(
-                        headlineContent = { Text("День: ${day.dateEpochDay}") }
+                        headlineContent = { Text("День (Epoch): ${day.dateEpochDay}") },
+                        supportingContent = { Text("Статус: ${if (day.completed) "Завершено" else "В плане"}") }
                     )
                 }
             }
@@ -37,7 +37,9 @@ fun CalendarScreen(db: AppDatabase) {
                     scope.launch {
                         db.workoutDayDao().insert(WorkoutDay(dateEpochDay = LocalDate.now().toEpochDay(), programId = 0))
                     }
-                }) { Text("Отметить сегодня") }
+                }, modifier = Modifier.padding(top = 16.dp)) {
+                    Text("Отметить сегодня")
+                }
             }
         }
     }
