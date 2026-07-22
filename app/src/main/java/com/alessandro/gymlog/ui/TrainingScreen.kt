@@ -3,87 +3,65 @@ package com.alessandro.gymlog.ui
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.material3.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.alessandro.gymlog.data.*
-import kotlinx.coroutines.delay
+import com.alessandro.gymlog.data.Exercise
+import com.alessandro.gymlog.data.ExerciseDao
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
-
 @Composable
-fun TrainingScreen(
-    db: AppDatabase,
-    programId: Long,
-    onFinish: () -> Unit
-) {
+fun TrainingScreen(exerciseDao: ExerciseDao) {
     val scope = rememberCoroutineScope()
+    val exercises by exerciseDao.getAllExercises().collectAsState(initial = emptyList())
+    var showDialog by remember { mutableStateOf(false) }
+    var name by remember { mutableStateOf("") }
 
-    val exercisesFlow = remember(programId) { db.programDao().getExercisesForProgram(programId) }
-    val exercises by exercisesFlow.collectAsState(emptyList())
-    var increasedIds by remember { mutableStateOf<Set<Long>>(emptySet()) }
-    var restSecondsLeft by remember { mutableStateOf(0) }
-    var restRunning by remember { mutableStateOf(false) }
-
-    LaunchedEffect(restRunning, restSecondsLeft) {
-        if (restRunning && restSecondsLeft > 0) {
-            delay(1000)
-            restSecondsLeft --
-        } else {
-            restRunning = false
-        }
-    }
-
-    Column(Modifier.fillMaxSize()) {
-        TopAppBar(
-            title = { Text("Тренировка") },
-            actions = {
-                TextButton(onClick = {
-                    scope.launch {
-                        db.workoutDayDao().markCompleted(programId, LocalDate.now().toEpochDay())
-                        onFinish()
-                    }
-                }) { Text("Завершить") }
+    Scaffold(
+        topBar = { TopAppBar(title = { Text("Моя тренировка") }) },
+        floatingActionButton = {
+            FloatingActionButton(onClick = { showDialog = true }) {
+                Icon(Icons.Default.Add, contentDescription = "Добавить")
             }
-        )
-
-
-        if (restSecondsLeft > 0) {
-            LinearProgressIndicator(Modifier.fillMaxWidth())
-            Text("Прогрест", modifier = Modifier.padding(8.dp)) 
         }
-
-        LazyColumn(Modifier.fillMaxSize()) {
-            items(exercises) { ex ->
-                Card(Modifier.padding(4.dp).fillMaxWidth()) {
-                    Column(Modifier.padding(8.dp)) {
-                        Text(ex.name, style = MaterialTheme.typography.titleMedium)
-                        Row(
-                            Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text("${ex.weight} кг x ${ex.reps}")
-                            Row {
-                                Button(onClick = { restSecondsLeft = 60; restRunning = true }) { Text("Отдых") }
-                                Spacer(Modifier.width(8.dp))
-                                if (!increasedIds.contains(ex.id)) {
-                                    OutlinedButton(onClick = {
-                                        scope.launch {
-                                            db.exerciseDao().update(ex.copy(weight = ex.weight + ex.weightStep))
-                                            increasedIds = increasedIds + ex.id
-                                        }
-                                    }) { Text("+") }
-                                }
-                            }
+    ) { padding ->
+        Column(modifier = Modifier.padding(padding)) {
+            LazyColumn(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+                items(exercises) { exercise ->
+                    Card(
+                        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
+                    ) {
+                        Column(modifier = Modifier.padding(16.dp)) {
+                            Text(text = exercise.name, style = MaterialTheme.typography.headlineSmall)
+                            Text(text = "Вес: ${exercise.weight} кг")
+                            Text(text = "Подходы: ${exercise.sets}")
                         }
                     }
                 }
             }
+        }
+
+        if (showDialog) {
+            AlertDialog(
+                onDismissRequest = { showDialog = false },
+                title = { Text("Новое упражнение") },
+                text = {
+                    TextField(value = name, onValueChange = { name = it }, label = { Text("Название") })
+                },
+                confirmButton = {
+                    Button(onClick = {
+                        scope.launch {
+                            exerciseDao.insert(Exercise(name = name, weight = 0.0, sets = 0, reps = 0, increment = 2.5))
+                            showDialog = false
+                            name = ""
+                        }
+                    }) { Text("Добавить") }
+                }
+            )
         }
     }
 }
