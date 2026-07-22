@@ -7,7 +7,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.getValue // Важный импорт
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.alessandro.gymlog.data.AppDatabase
@@ -18,8 +18,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun TrainingScreen(db: AppDatabase, programId: Long, onBack: () -> Unit) {
     val scope = rememberCoroutineScope()
-    // Если getAllExercises() не находит, проверьте ExerciseDao.kt
-    val exercises by db.exerciseDao().getAllExercises().collectAsState(initial = emptyList())
+    // В вашем Daos.kt метод называется getAll()
+    val exercises by db.exerciseDao().getAll().collectAsState(initial = emptyList())
     var showDialog by remember { mutableStateOf(false) }
     var exerciseName by remember { mutableStateOf("") }
 
@@ -37,6 +37,7 @@ fun TrainingScreen(db: AppDatabase, programId: Long, onBack: () -> Unit) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text(text = exercise.name, style = MaterialTheme.typography.headlineSmall)
                         Text(text = "Вес: ${exercise.currentWeight} кг")
+                        Text(text = "Подходы: ${exercise.sets}, Повторы: ${exercise.reps}")
                     }
                 }
             }
@@ -50,12 +51,13 @@ fun TrainingScreen(db: AppDatabase, programId: Long, onBack: () -> Unit) {
                 confirmButton = {
                     Button(onClick = {
                         scope.launch {
+                            // Соответствие конструктору из Entities.kt
                             db.exerciseDao().insert(Exercise(
                                 name = exerciseName,
                                 currentWeight = 0.0f,
                                 weightIncrement = 2.5f,
-                                sets = 0,
-                                reps = 0,
+                                sets = 3,
+                                reps = 12,
                                 durationMinutes = 0,
                                 restMinSeconds = 60,
                                 restMaxSeconds = 120
