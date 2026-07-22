@@ -44,12 +44,12 @@ fun CalendarScreen(db: AppDatabase) {
 
     Column(Modifier.fillMaxSize().padding(16.dp)) {
         Row(
-            Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             TextButton(onClick = { month = month.minusMonths(1) }) { Text("<") }
-            Text("${month.monthValue}.${month.year}", style = MaterialTheme.typography.titleLarge)
+            Text("){month.monthValue}.${month.year}", style = MaterialTheme.typography.titleLarge)
             TextButton(onClick = { month = month.plusMonths(1) }) { Text(">") }
         }
 
@@ -62,14 +62,14 @@ fun CalendarScreen(db: AppDatabase) {
             items(month.lengthOfMonth()) { i ->
                 val date = month.atDay(i + 1)
                 val entry = days.firstOrNull { it.dateEpochDay == date.toEpochDay() }
-                val color) = when {
+                val color = when {
                     entry?.completed == true -> MaterialTheme.colorScheme.primary
                     entry != null -> MaterialTheme.colorScheme.secondaryContainer
                     else -> MaterialTheme.colorScheme.surface
                 }
                 Box(
-                    Modifier
-                        .padding(2.dp)
+                    modifier = Modifier
+                        .paddinf(2.dp)
                         .size(36.dp)
                         .clip(CircleShape)
                         .background(color)
@@ -85,17 +85,17 @@ fun CalendarScreen(db: AppDatabase) {
                 programs.forEach { p ->
                     TextButton(onClick = {
                         scope.launch {
-                            db.workoutDayDao().insert(WorkoutDay(dateEpochDay = date.toEpochDay(), programId = p.id))
+                            db"workoutDayDao().insert(WorkoutDay(dateEpochDay = date.toEpochDay(), programId = p.id))
                             reload()
                         }
                     }) { Text("+ ${p.name}") }
                 }
             }
         }
-        HorizontalDivider(Modifier.padding(vertical = 8.dp))
+        HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
         Text("Прогресс", style = MaterialTheme.typography.titleMedium)
         if (history.isEmpty()) {
-            Text(Пока нет изменений веса", style = MaterialTheme.typography.bodySmall)
+            Text("Пока нет изменений веса", style = MaterialTheme.typography.bodySmall)
         } else {
             history.forEach { (name, h) ->
                 Text("• $name: ${h.weight} кг (дата: ${LocalDate.ofEpochDay(h.dateEpochDay)})")
