@@ -53,7 +53,6 @@ dependencies {
 
     implementation("com.google.android.gms/play-services-auth:21.2.0")
     implementation("com.squareup.okhtp3:logging-interceptor:4.12.0")
-    implementation("com.squareup.okhtp3:network-statis:0.1.0")
     implementation("com.squareup.okhtp3:okhtp:4.12.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
 }
