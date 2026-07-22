@@ -10,7 +10,7 @@ import java.net.URLEncoder
 
 object AiClient {
     // ВАЖНО: вставь сюда URL своего Cloudflare Worker
-    private const val PROXY_URL = "https://gym-ai-proxy.YOUR-SUBDOMAIN.workers.dev"
+    private const val PROXY_URL = "https://gym-ai-proxy.azagrebnev2007.workers.dev/"
 
     suspend fun askAboutExercise(name: String): String = withContext(Dispatchers.IO) {
         val prompt = "Кратко (5-7 предложений) объясни правильную технику упражнения \"$name\": " +
