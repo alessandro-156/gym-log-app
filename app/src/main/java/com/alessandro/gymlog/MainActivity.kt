@@ -39,26 +39,26 @@ class MainActivity : ComponentActivity() {
                                 NavigationBarItem(
                                     selected = tab == 0,
                                     onClick = { tab = 0 },
-                                    icon = { Icon(Icons.Filled.FitnessCenter, contentDescription = "Упражнения") },
-                                    label = { Text("Упражнения") }
+                                    icon = { Icon(Icons.Filled.FitnessCenter, contentDescription = "Упр") },
+                                    label = { Text("Упр") }
                                 )
                                 NavigationBarItem(
                                     selected = tab == 1,
                                     onClick = { tab = 1 },
-                                    icon = { Icon(Icons.Filled.List, contentDescription = "Программы") },
-                                    label = { Text("Программы") }
+                                    icon = { Icon(Icons.Filled.List, contentDescription = "Прог") },
+                                    label = { Text("Прог") }
                                 )
                                 NavigationBarItem(
                                     selected = tab == 2,
                                     onClick = { tab = 2 },
-                                    icon = { Icon(Icons.Filled.DateRange, contentDescription = "Календарь") },
-                                    label = { Text("Календарь") }
+                                    icon = { Icon(Icons.Filled.DateRange, contentDescription = "Кал") },
+                                    label = { Text("Кал") }
                                 )
                                 NavigationBarItem(
                                     selected = tab == 3,
                                     onClick = { tab = 3 },
-                                    icon = { Icon(Icons.Filled.Settings, contentDescription = "Настройки") },
-                                    label = { Text("Настройки") }
+                                    icon = { Icon(Icons.Filled.Settings, contentDescription = "Настр") },
+                                    label = { Text("Настр") }
                                 )
                             }
                         }
@@ -67,7 +67,6 @@ class MainActivity : ComponentActivity() {
                     Box(Modifier.padding(padding)) {
                         val pid = activeProgramId
                         if (pid != null) {
-                            // Передаем db обратно, как было в оригинале
                             TrainingScreen(db, pid) { activeProgramId = null }
                         } else {
                             when (tab) {
