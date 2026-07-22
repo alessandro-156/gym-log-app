@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.runtime.rememberCoroutineScope
 import kotlinx.coroutines.launch
 import com.alessandro.gymlog.data.AppDatabase
-import com.alessandro.gymlog.ui.(
+import com.alessandro.gymlog.ui.*
 import com.alessandro.gymlog.ui.theme.GymLogTheme
 import com.alessandro.gymlog.ui.theme.ThemeMode
 
