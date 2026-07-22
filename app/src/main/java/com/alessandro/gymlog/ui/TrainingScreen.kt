@@ -7,6 +7,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.getValue // Важный импорт
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.alessandro.gymlog.data.AppDatabase
@@ -17,7 +18,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun TrainingScreen(db: AppDatabase, programId: Long, onBack: () -> Unit) {
     val scope = rememberCoroutineScope()
-    // Используем db.exerciseDao() внутри
+    // Если getAllExercises() не находит, проверьте ExerciseDao.kt
     val exercises by db.exerciseDao().getAllExercises().collectAsState(initial = emptyList())
     var showDialog by remember { mutableStateOf(false) }
     var exerciseName by remember { mutableStateOf("") }
@@ -51,8 +52,8 @@ fun TrainingScreen(db: AppDatabase, programId: Long, onBack: () -> Unit) {
                         scope.launch {
                             db.exerciseDao().insert(Exercise(
                                 name = exerciseName,
-                                currentWeight = 0.0f, // Используем Float
-                                weightIncrement = 2.5f, // Используем Float
+                                currentWeight = 0.0f,
+                                weightIncrement = 2.5f,
                                 sets = 0,
                                 reps = 0,
                                 durationMinutes = 0,
