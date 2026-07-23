@@ -1,6 +1,7 @@
 package com.alessandro.gymlog
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
@@ -17,15 +18,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import com.alessandro.gymlog.data.AppDatabase
+import com.alessandro.gymlog.data.Exercise
 import com.alessandro.gymlog.ui.*
 import com.alessandro.gymlog.ui.theme.GymLogTheme
 import com.alessandro.gymlog.ui.theme.ThemeMode
+import com.alessandro.gymlog.ai.AiClient
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val db = AppDatabase.get(applicationContext)
         val appContext = applicationContext
+        
         setContent {
             val scope = rememberCoroutineScope()
             val themeMode by Settings.themeMode(appContext).collectAsState(initial = ThemeMode.SYSTEM)
@@ -76,7 +80,9 @@ class MainActivity : ComponentActivity() {
                         } else {
                             Box {
                                 when (tab) {
-                                    0 -> ExercisesScreen(db)
+                                    0 -> ExercisesScreen(db) { exercise -> 
+                                        askAboutExercise(exercise)
+                                    }
                                     1 -> ProgramsScreen(db) { id -> activeProgramId = id; isMinimized = false }
                                     2 -> CalendarScreen(db)
                                     3 -> SettingsScreen(themeMode, { mode ->
@@ -97,6 +103,15 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                 }
+            }
+        }
+    }
+
+    private fun askAboutExercise(exercise: Exercise) {
+        AiClient.getExerciseInfo(exercise.name) { response ->
+            runOnUiThread {
+               // В будущем здесь будет красивое окно, а пока выводим результат в Toast для проверки
+               Toast.makeText(this, response, Toast.LENGTH_LONG).show()
             }
         }
     }
