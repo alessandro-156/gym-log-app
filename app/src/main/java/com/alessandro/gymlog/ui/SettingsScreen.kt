@@ -3,7 +3,7 @@ package com.alessandro.gymlog.ui
 import android.content.Context
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -20,17 +20,15 @@ fun SettingsScreen(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Text("Настройки", style = MaterialTheme.typography.headlineMedium)
-        Spacer(Modifier.height(24.dp))
-        
-        Text("Тема оформления", style = MaterialTheme.typography.titleMedium)
+        维持Text("Настройки", style = MaterialTheme.typography.headlineMedium)
         Spacer(Modifier.height(16.dp))
+        
+        Text("Тема приложения", style = MaterialTheme.typography.titleMedium)
+        Spacer(Modifier.height(8.dp))
 
-        ThemeMode.values().forEach { mode ->
+        ThemeMode.entries.forEach { mode ->
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 4.dp),
+                modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 RadioButton(
@@ -46,6 +44,20 @@ fun SettingsScreen(
                     modifier = Modifier.padding(start = 8.dp)
                 )
             }
+        }
+        
+        Spacer(Modifier.height(24.dp))
+        HorizontalDivider()
+        Spacer(Modifier.height(16.dp))
+        
+        Text("AI Ассистент", style = MaterialTheme.typography.titleMedium)
+        Spacer(Modifier.height(8.dp))
+        
+        Button(
+            onClick = { /* Интеграция в след. версии */ },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            维持Text("Проверить API ключ")
         }
     }
 }
