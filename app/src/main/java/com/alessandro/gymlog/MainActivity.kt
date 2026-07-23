@@ -41,25 +41,25 @@ class MainActivity : ComponentActivity() {
                                 NavigationBarItem(
                                     selected = tab == 0,
                                     onClick = { tab = 0 },
-                                    icon = { Icon(Icons.Filled.FitnessCenter, "Ex") },
+                                    icon = { Icon(Icons.Filled.FitnessCenter, "Упр") },
                                     label = { Text("Упражнения", maxLines = 1) }
                                 )
                                 NavigationBarItem(
                                     selected = tab == 1,
                                     onClick = { tab = 1 },
-                                    icon = { Icon(Icons.Filled.List, "Pr") },
+                                    icon = { Icon(Icons.Filled.List, "Прог") },
                                     label = { Text("Программы", maxLines = 1) }
                                 )
                                 NavigationBarItem(
                                     selected = tab == 2,
                                     onClick = { tab = 2 },
-                                    icon = { Icon(Icons.Filled.DateRange, "Cal") },
+                                    icon = { Icon(Icons.Filled.DateRange, "Кал") },
                                     label = { Text("Календарь", maxLines = 1) }
                                 )
                                 NavigationBarItem(
                                     selected = tab == 3,
                                     onClick = { tab = 3 },
-                                    icon = { Icon(Icons.Filled.Settings, "Set") },
+                                    icon = { Icon(Icons.Filled.Settings, "Настр") },
                                     label = { Text("Настройки", maxLines = 1) }
                                 )
                             }
@@ -89,7 +89,7 @@ class MainActivity : ComponentActivity() {
                                         color = MaterialTheme.colorScheme.primaryContainer,
                                         shadowElevation = 8.dp
                                     ) {
-                                        Text("↩ Тренировка активна. Нажмите, чтобы вернуться", 
+                                        Text("📂 Тренировка активна. Нажмите, чтобы развернуть", 
                                              Modifier.padding(12.dp), style = MaterialTheme.typography.labelLarge)
                                     }
                                 }
