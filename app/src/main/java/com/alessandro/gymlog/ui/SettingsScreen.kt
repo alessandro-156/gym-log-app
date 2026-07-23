@@ -8,6 +8,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.alessandro.gymlog.ui.theme.ThemeMode
+import com.alessandro.gymlog.ui.Settings
 
 @Composable
 fun SettingsScreen(
@@ -20,7 +21,7 @@ fun SettingsScreen(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        维持Text("Настройки", style = MaterialTheme.typography.headlineMedium)
+        Text("Настройки", style = MaterialTheme.typography.headlineMedium)
         Spacer(Modifier.height(16.dp))
         
         Text("Тема приложения", style = MaterialTheme.typography.titleMedium)
@@ -57,7 +58,7 @@ fun SettingsScreen(
             onClick = { /* Интеграция в след. версии */ },
             modifier = Modifier.fillMaxWidth()
         ) {
-            维持Text("Проверить API ключ")
+            Text("Проверить API ключ")
         }
     }
 }
